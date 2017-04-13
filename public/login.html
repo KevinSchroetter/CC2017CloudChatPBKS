@@ -1,0 +1,58 @@
+<!--
+/*
+ * @author Philipp Bahnmüller (742233), Kevin Schrötter (742082)
+ */ 
+ -->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Chat login</title>
+</head>
+<body>
+<h3>Chat Login</h3>
+<form action="">
+	Username: <input id="username" type="text" maxlength="30"><h5 id="error"></h5>
+	Password: <input id="password" type="password" maxlength="30">
+	<button>Login</button><br>
+	<input id="checkbox" type="checkbox" value="false"> New User?
+</form>
+
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+	
+	$(function(){
+		var socket = io();
+		$('form').submit(function(){
+			var checked;
+			if($('#checkbox').is(':checked')){
+				checked = "true";
+			}
+			else{
+				checked = "false";
+			}
+			sessionStorage.setItem('username',$('#username').val());
+			socket.emit('login request',{username: $('#username').val(),password: $('#password').val(),newuser: checked});
+			$('#username').val('');
+			$('#password').val('');
+			$('#checkbox').attr('checked',false);
+			return false;
+		});
+		
+		socket.on('login response',function(data){
+			if(data.successful === "true"){
+				console.log('login successful');
+				document.location.href = "index";
+			}
+			else{
+				$('#error').text(data.reason);
+			}
+		});
+	});
+		
+	
+</script>
+</body>
+</html>
