@@ -4,4 +4,4 @@ Chat Application from Philipp Bahnmueller 742233 and Kevin Schroetter 742082
 
 (https://CCCloudChatPBKS.mybluemix.net)
 
-[![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.com/KevinSchroetter/CCCloudChatPBKS/Exercise2)
+[![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.com/KevinSchroetter/CCCloudChatPBKS/tree/master/Exercise2)
