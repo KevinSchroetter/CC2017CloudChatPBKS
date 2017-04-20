@@ -10,6 +10,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 var path = require('path');
+var router = express.Router();
 
 // Datenbank
 
@@ -32,16 +33,30 @@ var Account = mongoose.model('Account', accountSchema);
 
 var sockets = {};
 
-app.use('/static',express.static(path.join(__dirname,'public')));
+app.use(express.static(path.join(__dirname,'public')));
+app.use(router);
+//app.use('/static',express.static(path.join(__dirname,'public')));
+console.log("Public okay");
 
-app.get('/', function(req, res){
-	res.sendFile(__dirname + '/public/login.html');
+/*
+ * It seems like Node JS automatically uses a file called index.html
+ * for the default route '/'. There it doesn't matter, where exactly the file
+ * is located as long as it is somehwhere near the main directory
+ * or the public directory
+ */
+router.get('/login', function(req, res){
+	res.sendFile(__dirname + '/public/index.html');
 });
 
-app.get('/index', function(req, res){
+router.get('/index', function(req, res){
 	res.sendFile(__dirname + '/public/index.html');	
 });
-
+router.get('/chat', function(req, res){
+	res.sendFile(__dirname + '/public/chat.html');	
+});
+router.get('/test', function(req,res){
+	res.sendFile(__dirname + '/public/test.html');
+});
 io.on('connection', function(socket){
   socket.on('chat message', function(msg){
     socket.broadcast.emit('chat message', msg);
