@@ -13,6 +13,9 @@ var path = require('path');
 var router = express.Router();
 
 // Datenbank
+// Credentials for usage of Cloudant Database
+// Cloudant Username: arairephicauggressinglin
+// Cloudant Password: a5cb52d6ac2bc37075ba0f174451db8f81094bd3
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://CCBSHSRT:CCBSHSRT1234@ds149820.mlab.com:49820/cloudcomputing');
