@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "Second Exercise from Philipp Bahnmueller(742233) and Kevin Schroetter(742982)",
   "dependencies": {
+    "body-parser": "^1.17.1",
+    "cloudant": "^1.7.1",
     "express": "^4.15.2",
-    "socket.io": "^1.7.3",
-	"mongodb": "^2.2.25",
-	"mongoose": "^4.9.3",
-	"body-parser": "^1.17.1"
+    "mongodb": "^2.2.25",
+    "mongoose": "^4.9.3",
+    "socket.io": "^1.7.3"
   },
   "scripts": {
     "start": "node app.js"
