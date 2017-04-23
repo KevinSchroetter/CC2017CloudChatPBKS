@@ -9,7 +9,7 @@ var app = express();
 var fs = require('fs');
 var port = process.env.PORT || 3000;
 var path = require('path');
-//var http = require('http').Server(app);
+//var http = require('http')
 var https = require('https');
 var httpsOptions = {
 	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
@@ -20,6 +20,16 @@ var server = https.createServer(httpsOptions, app)
 	console.log('listening on *:' + port + " using https!");
 });
 app.enable('trust proxy');
+app.use (function (req, res, next) {
+        if (req.secure) {
+                // request was via https, so do no special handling
+                next();
+        } else {
+                // request was via http, so redirect to https
+                res.redirect('https://' + req.headers.host + req.url);
+        }
+});
+
 var io = require('socket.io').listen(server);
 
 var router = express.Router();
