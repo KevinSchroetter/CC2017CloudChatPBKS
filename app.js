@@ -17,7 +17,7 @@ var httpsOptions = {
 }
 var server = https.createServer(httpsOptions, app)
  .listen(port, function(){
-	console.log('listening on *:' + port);
+	console.log('listening on *:' + port + " using https!");
 });
 
 var io = require('socket.io').listen(server);
