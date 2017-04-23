@@ -9,12 +9,18 @@ var app = express();
 var fs = require('fs');
 var port = process.env.PORT || 3000;
 var path = require('path');
-//var http = require('http')
+
+/*
+ * Use this and uncomment part below that for HTTPS connection
+ */
+//##################################################
+/*
 var https = require('https');
 var httpsOptions = {
 	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
 	key: fs.readFileSync(path.join(__dirname, 'ssl','server.key'))
 }
+
 var server = https.createServer(httpsOptions, app)
  .listen(port, function(){
 	console.log('listening on *:' + port + " using https!");
@@ -29,6 +35,21 @@ app.use (function (req, res, next) {
                 res.redirect('https://' + req.headers.host + req.url);
         }
 });
+*/
+//#################################################
+
+
+/*
+ * Comment this part and uncomment the part above for using https connection
+ */
+
+//#################################################
+var http = require('http')
+var server = http.createServer(app);
+server.listen(port, function(){
+	console.log("Server listening on Port: "+port);
+});
+//##################################################
 
 var io = require('socket.io').listen(server);
 
