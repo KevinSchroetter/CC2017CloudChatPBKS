@@ -114,7 +114,6 @@ var sockets = {};
 //Creating a static folder 'public' so that the html files are able to load local scripts and pages
 app.use(express.static(path.join(__dirname,'public')));
 app.use(router);
-
 /*var httpsOptions = {
 	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
 	key: fs.readFileSync(path.join(__dirname, 'ssl','server.key'))
