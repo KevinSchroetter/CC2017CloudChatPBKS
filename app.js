@@ -6,10 +6,22 @@
 
 var express = require('express');
 var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var fs = require('fs');
 var port = process.env.PORT || 3000;
 var path = require('path');
+//var http = require('http').Server(app);
+var https = require('https');
+var httpsOptions = {
+	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
+	key: fs.readFileSync(path.join(__dirname, 'ssl','server.key'))
+}
+var server = https.createServer(httpsOptions, app)
+ .listen(port, function(){
+	console.log('listening on *:' + port);
+});
+
+var io = require('socket.io').listen(server);
+
 var router = express.Router();
 /*
  * Cloudant information and credentials
@@ -46,26 +58,7 @@ cloudant.db.destroy('alice', function(err) {
   });
 });
 */
-
-//Database Connection with Cloudant ASYNCHRONOUS call
-
-
-
-//This is an example code for showing available databases.
-//The same style is later used for working with the database since it has to be an asynchronous call!
-
-Cloudant({account:me, key:apiKey, password:apiPW}, function(err, cloudant){
-	if(err){
-		return console.log('Failed to initialize Cloudant DB CCCloudChatDB: '+err.message);
-	}
-	cloudant.db.list(function(err,allDbs){
-	//	console.log("ALL my dbs: %s", allDbs.join(','));
-	});
-	var chatDB = cloudant.db.use("cccloudchatdb"); //cccloudchatdb is the name of the used database in Cloudant!
-});
- 
-
- //MONGOOSE Connection - No longer needed due to requirements within exercise2 from cloud computing
+//MONGOOSE Connection - No longer needed due to requirements within exercise2 from cloud computing
 /*
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://CCBSHSRT:CCBSHSRT1234@ds149820.mlab.com:49820/cloudcomputing');
@@ -90,6 +83,14 @@ var sockets = {};
 //Creating a static folder 'public' so that the html files are able to load local scripts and pages
 app.use(express.static(path.join(__dirname,'public')));
 app.use(router);
+/*var httpsOptions = {
+	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
+	key: fs.readFileSync(path.join(__dirname, 'ssl','server.key'))
+}
+https.createServer(httpsOptions, app)
+ .listen(port, function(){
+	console.log('listening on *:' + port);
+});*/
 //app.use('/static',express.static(path.join(__dirname,'public')));
 console.log("Public folder initialized");
 
@@ -326,7 +327,8 @@ io.on('connection', function(socket){
 	 }
   }); */ 
 
-
+/*
 http.listen(port, function(){
   console.log('listening on *:' + port);
 });
+*/
