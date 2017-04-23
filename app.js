@@ -19,7 +19,7 @@ var server = https.createServer(httpsOptions, app)
  .listen(port, function(){
 	console.log('listening on *:' + port + " using https!");
 });
-
+app.enable('trust proxy');
 var io = require('socket.io').listen(server);
 
 var router = express.Router();
