@@ -14,7 +14,7 @@ process.env.NODE_TLS_REKECT_UNAUTHORIZED = '0';
  * Use this and uncomment part below that for HTTPS connection
  */
 //##################################################
-console.log("log before https require!");
+/*
 var https = require('https');
 var httpsOptions = {
 	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
@@ -24,8 +24,28 @@ var server = https.createServer(httpsOptions, app)
  .listen(port, function(){
 	console.log('listening on *:' + port + " using https!");
 });
-app.enable('trust proxy');
+*/
+
+
+//#################################################
+
+
 /*
+ * Comment this part and uncomment the part above for using https connection
+ */
+
+//#################################################
+
+var http = require('http')
+var server = http.createServer(app);
+server.listen(port, function(){
+	console.log("Server listening on Port: "+port);
+});
+
+//##################################################
+
+app.enable('trust proxy');
+
 app.use (function (req, res, next) {
 		console.log(req.protocol);
         if (req.secure) {
@@ -36,7 +56,7 @@ app.use (function (req, res, next) {
                 res.redirect('https://' + req.headers.host + req.url);
         }
 });
-*/
+
 app.use(function(req,res,next){
 	var schema = req.headers["x-forwarded-proto"];
 	if(schema === "https"){
@@ -44,23 +64,6 @@ app.use(function(req,res,next){
 	}
 	next();
 });
-
-//#################################################
-
-
-/*
- * Comment this part and uncomment the part above for using https connection
- */
-
-//#################################################
-/*
-var http = require('http')
-var server = http.createServer(app);
-server.listen(port, function(){
-	console.log("Server listening on Port: "+port);
-});
-*/
-//##################################################
 
 var io = require('socket.io').listen(server);
 
