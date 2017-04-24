@@ -27,6 +27,7 @@ var server = https.createServer(httpsOptions, app)
 	console.log('listening on *:' + port + " using https!");
 });
 console.log("https server created");
+console.log("test");
 app.enable('trust proxy');
 /*
 app.use (function (req, res, next) {
