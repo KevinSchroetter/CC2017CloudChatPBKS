@@ -16,18 +16,14 @@ var path = require('path');
 //##################################################
 console.log("log before https require");
 var https = require('https');
-console.log("https-required");
 var httpsOptions = {
 	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
 	key: fs.readFileSync(path.join(__dirname, 'ssl','server.key'))
 }
-console.log("https set");
 var server = https.createServer(httpsOptions, app)
  .listen(port, function(){
 	console.log('listening on *:' + port + " using https!");
 });
-console.log("https server created");
-console.log("test");
 app.enable('trust proxy');
 /*
 app.use (function (req, res, next) {
