@@ -14,7 +14,7 @@ var path = require('path');
  * Use this and uncomment part below that for HTTPS connection
  */
 //##################################################
-console.log("log before https require");
+console.log("log before https require!");
 var https = require('https');
 var httpsOptions = {
 	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
