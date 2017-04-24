@@ -16,18 +16,21 @@ var path = require('path');
 //##################################################
 
 var https = require('https');
+console.log("https-required");
 var httpsOptions = {
 	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
 	key: fs.readFileSync(path.join(__dirname, 'ssl','server.key'))
 }
-
+console.log("https set");
 var server = https.createServer(httpsOptions, app)
  .listen(port, function(){
 	console.log('listening on *:' + port + " using https!");
 });
+console.log("https server created");
 app.enable('trust proxy');
+/*
 app.use (function (req, res, next) {
-		console.log(req.headers);
+		console.log(req.protocol);
         if (req.secure) {
                 // request was via https, so do no special handling
                 next();
@@ -36,6 +39,7 @@ app.use (function (req, res, next) {
                 res.redirect('https://' + req.headers.host + req.url);
         }
 });
+*/
 app.use(function(req,res,next){
 	var schema = req.headers["x-forwarded-proto"];
 	if(schema === "https"){
