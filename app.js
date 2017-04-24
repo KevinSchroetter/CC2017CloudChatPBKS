@@ -14,7 +14,7 @@ var path = require('path');
  * Use this and uncomment part below that for HTTPS connection
  */
 //##################################################
-/*
+
 var https = require('https');
 var httpsOptions = {
 	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
@@ -35,7 +35,13 @@ app.use (function (req, res, next) {
                 res.redirect('https://' + req.headers.host + req.url);
         }
 });
-*/
+app.use(function(req,res,next){
+	var schema = req.headers["x-forwarded-proto"];
+	if(schema === "https"){
+		req.connection.encrypted = true;
+	}
+	next();
+});
 //#################################################
 
 
@@ -44,11 +50,13 @@ app.use (function (req, res, next) {
  */
 
 //#################################################
+/*
 var http = require('http')
 var server = http.createServer(app);
 server.listen(port, function(){
 	console.log("Server listening on Port: "+port);
 });
+*/
 //##################################################
 
 var io = require('socket.io').listen(server);
@@ -114,14 +122,7 @@ var sockets = {};
 //Creating a static folder 'public' so that the html files are able to load local scripts and pages
 app.use(express.static(path.join(__dirname,'public')));
 app.use(router);
-/*var httpsOptions = {
-	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
-	key: fs.readFileSync(path.join(__dirname, 'ssl','server.key'))
-}
-https.createServer(httpsOptions, app)
- .listen(port, function(){
-	console.log('listening on *:' + port);
-});*/
+
 //app.use('/static',express.static(path.join(__dirname,'public')));
 console.log("Public folder initialized");
 
