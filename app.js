@@ -9,7 +9,7 @@ var app = express();
 var fs = require('fs');
 var port = process.env.PORT || 3000;
 var path = require('path');
-
+process.env.NODE_TLS_REKECT_UNAUTHORIZED = '0';
 /*
  * Use this and uncomment part below that for HTTPS connection
  */
