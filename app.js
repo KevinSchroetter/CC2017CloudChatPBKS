@@ -27,6 +27,7 @@ var server = https.createServer(httpsOptions, app)
 });
 app.enable('trust proxy');
 app.use (function (req, res, next) {
+		console.log(req.headers);
         if (req.secure) {
                 // request was via https, so do no special handling
                 next();
@@ -42,6 +43,7 @@ app.use(function(req,res,next){
 	}
 	next();
 });
+
 //#################################################
 
 
