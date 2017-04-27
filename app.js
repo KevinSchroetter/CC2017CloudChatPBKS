@@ -2,7 +2,7 @@
  * @author Philipp Bahnmüller (742233), Kevin Schrötter (742082)
  */
 
-// Server
+// Loading node.js modules
 
 var express = require('express');
 var app = express();
@@ -12,6 +12,7 @@ var xss = require('xss');
 var validUrl = require('valid-url');
 
 //#################################################
+//Server initialization
 var http = require('http')
 var server = http.createServer(app);
 server.listen(port, function(){
@@ -19,9 +20,12 @@ server.listen(port, function(){
 });
 
 //##################################################
-
+//using trusted proxy for bluemix
 app.enable('trust proxy');
-
+/*
+ * Redirecting http requests to https requests to force https usage on bluemix
+ * Original code snipped copied from http://stackoverflow.com/questions/36162840/force-ssl-in-nodejs-bluemix
+ */
 app.use (function (req, res, next) {
     if (req.secure) {
             // request was via https, so do no special handling
@@ -38,7 +42,9 @@ app.use (function (req, res, next) {
 		}
     }
 });
-
+/*
+ * Forcing encrypted connection for https
+ */
 app.use(function(req,res,next){
 	var schema = req.headers["x-forwarded-proto"];
 	if(schema === "https"){
