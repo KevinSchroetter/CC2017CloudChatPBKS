@@ -54,7 +54,7 @@ app.use(function(req,res,next){
 });
 
 app.use(function(req,res,next){
-	res.setHeader("Content-Security-Policy", "script-src 'self' https://cdn.socket.io/socket.io-1.2.0.js", "default-src 'self'");
+	res.setHeader("Content-Security-Policy", "script-src 'self' https://cdn.socket.io/", "default-src 'self'");
 	return next();
 });
 
