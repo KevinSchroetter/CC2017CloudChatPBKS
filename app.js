@@ -10,7 +10,6 @@ var port = process.env.PORT || 3000;
 var path = require('path');
 var xss = require('xss');
 var validUrl = require('valid-url');
-var helmet = require('helmet');
 
 //#################################################
 //Server initialization
@@ -53,10 +52,6 @@ app.use(function(req,res,next){
 	}
 	next();
 });
-// Implement X-XSS-Protection
-app.use(helmet.xssFilter());
-
-
 
 var io = require('socket.io').listen(server);
 
