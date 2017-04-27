@@ -1,12 +1,13 @@
-<!--
+ï»¿<!--
 /*
- * @author Philipp Bahnmüller (742233), Kevin Schrötter (742082)
+ * @author Philipp BahnmÃ¼ller (742233), Kevin SchrÃ¶tter (742082)
  */ 
  -->
 
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>CCSS2017 Chat</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,6 +31,7 @@
     </form>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="jQuery/jquery.js"></script>
+	<script src="functions.js"></script>
     <script>
       $(function () {
 	  if((!sessionStorage.getItem('username'))||(sessionStorage.getItem('username')==null)){
@@ -39,7 +41,6 @@
 	  else{
 		console.log("Login ok");
 	  
-    	
     	$('#user').text('Logged in as '+sessionStorage.getItem('username'));
     	  
    	  	function getFormattedDate() {
@@ -75,6 +76,7 @@
         			else{
         				message = message.replace(splitted[0],'');
         				message = message.replace(splitted[1],'');
+						message = pbksValidate(message);
         				message = getFormattedDate()+' (Private) '+sessionStorage.getItem('username')+': '+message;
             			socket.emit('private message',{to: splitted[1],msg: message}); 
             			$('#messages').append($('<li style="color:purple;">').text(message));
@@ -90,7 +92,8 @@
         	}
         	else{
         		message = getFormattedDate()+' '+sessionStorage.getItem('username')+': '+message;
-        		socket.emit('chat message',{msg: message});
+				socket.emit('chat message',{msg: message});
+				message = pbksValidate(message);
         		$('#messages').append($('<li style="font-weight:bold;">').text(message));
               	window.scrollTo(0, document.body.scrollHeight);
         	}
@@ -100,11 +103,13 @@
         });
       
         socket.on('chat message', function(msg){
-          $('#messages').append($('<li>').text(msg.msg));
-          window.scrollTo(0, document.body.scrollHeight);
+			msg.msg = pbksValidate(msg.msg);
+			$('#messages').append($('<li>').text(msg.msg));
+			window.scrollTo(0, document.body.scrollHeight);
         });
         
         socket.on('private message',function(msg){
+			msg.msg = pbksValidate(msg.msg);
          	$('#messages').append($('<li style="color:purple;">').text(msg.msg));
           	window.scrollTo(0, document.body.scrollHeight);
         });

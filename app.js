@@ -1,4 +1,4 @@
-/*
+﻿/*
  * @author Philipp Bahnmüller (742233), Kevin Schrötter (742082)
  */
 
@@ -6,33 +6,10 @@
 
 var express = require('express');
 var app = express();
-var fs = require('fs');
 var port = process.env.PORT || 3000;
 var path = require('path');
-process.env.NODE_TLS_REKECT_UNAUTHORIZED = '0';
-/*
- * Use this and uncomment part below that for HTTPS connection
- */
-//##################################################
-/*
-var https = require('https');
-var httpsOptions = {
-	cert: fs.readFileSync(path.join(__dirname, 'ssl','server.crt')),
-	key: fs.readFileSync(path.join(__dirname, 'ssl','server.key'))
-}
-var server = https.createServer(httpsOptions, app)
- .listen(port, function(){
-	console.log('listening on *:' + port + " using https!");
-});
-*/
-
-
-//#################################################
-
-
-/*
- * Comment this part and uncomment the part above for using https connection
- */
+var xss = require('xss');
+var validUrl = require('valid-url');
 
 //#################################################
 var http = require('http')
@@ -46,16 +23,22 @@ server.listen(port, function(){
 app.enable('trust proxy');
 
 app.use (function (req, res, next) {
-		console.log(req.protocol);
-        if (req.secure) {
-                // request was via https, so do no special handling
-                next();
-        } else {
-                // request was via http, so redirect to https
-                res.redirect('https://' + req.headers.host + req.url);
-        }
+    if (req.secure) {
+            // request was via https, so do no special handling
+            next();
+    } 
+	else {
+        // request was via http, so redirect to https
+		var newUrl = 'https://' + req.headers.host + req.url;
+		if(validUrl.isUri(newUrl)){
+			res.redirect(newUrl);
+		}
+		else{
+			console.log("ERROR redirecting");
+		}
+    }
 });
-/*
+
 app.use(function(req,res,next){
 	var schema = req.headers["x-forwarded-proto"];
 	if(schema === "https"){
@@ -63,7 +46,7 @@ app.use(function(req,res,next){
 	}
 	next();
 });
-*/
+
 var io = require('socket.io').listen(server);
 
 var router = express.Router();
@@ -76,53 +59,10 @@ var me = 'f1309e1c-4774-4f1e-8621-7881c5bc0f78-bluemix';  //Account name
 var apiKey = 'veringetneredsorytoricry';	//From Cloudant generated API Key
 var apiPW = 'ac834bca3e30393e4208ac1a5aa1c56a1074f6b1';	//Password for the generated API Key
 
-
-// Database connection with Cloudant. This is an example for a synchronous call!!
-/*
-var cloudant = Cloudant({account:username, password:password});
-
-// Remove any existing database called "alice".
-cloudant.db.destroy('alice', function(err) {
-
-  // Create a new "alice" database.
-  cloudant.db.create('alice', function() {
-
-    // Specify the database we are going to use (alice)...
-    var alice = cloudant.db.use('alice')
-
-    // ...and insert a document in it.
-    alice.insert({ crazy: true }, 'rabbit', function(err, body, header) {
-      if (err) {
-        return console.log('[alice.insert] ', err.message);
-      }
-
-      console.log('You have inserted the rabbit.');
-      console.log(body);
-    });
-  });
-});
-*/
-//MONGOOSE Connection - No longer needed due to requirements within exercise2 from cloud computing
-/*
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://CCBSHSRT:CCBSHSRT1234@ds149820.mlab.com:49820/cloudcomputing');
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-	console.log('Database connected!');
-});
-
-var accountSchema = mongoose.Schema({
-    username: String,
-    password: String
-});
-
-var Account = mongoose.model('Account', accountSchema);
-*/
-
-// Funktionen
+//Functions
 
 var sockets = {};
+
 
 //Creating a static folder 'public' so that the html files are able to load local scripts and pages
 app.use(express.static(path.join(__dirname,'public')));
@@ -169,9 +109,10 @@ io.on('connection', function(socket){
 	console.log("Connected to server!");
 	
 	/*
-	 * Function that boradcasts a message sent from a single chat user to all other users
+	 * Function that broadcasts a message sent from a single chat user to all other users
 	 */
 	socket.on('chat message', function(msg){
+	msg.msg = xss(msg.msg);
 		socket.broadcast.emit('chat message', msg);
 	});
 	
@@ -179,8 +120,10 @@ io.on('connection', function(socket){
 	 * This Method sends a broadcast to all chat users when a user disconnects. It also sends the name of the disconnected user
 	 */
 	socket.on('disconnect',function(){
-		io.emit('user disconnect',"User "+socket.username+" disconnected!");
-		delete sockets[socket.username];
+		if(socket.username){
+			io.emit('user disconnect',"User "+socket.username+" disconnected!");
+			delete sockets[socket.username];
+		}
 	});
 	
 	/*
@@ -198,6 +141,7 @@ io.on('connection', function(socket){
 	 */
 	socket.on('private message',function(data){
 		if(sockets[data.to]){
+			data.msg = xss(data.msg);
 			sockets[data.to].emit('private message',data);
 		}
 		else{
@@ -245,12 +189,12 @@ io.on('connection', function(socket){
 				}
 				//No User Found
 				if(!result.docs[0]){
-					console.log("user "+data.username+" is not in database!");
+					console.log("User "+data.username+" is not in database!");
 					/*
 					* CASE 1 No Found User + No New User Creation Request -> It is a login request -> Login-ERROR
 					*/
 					if(data.newuser === "false"){
-						console.log("You wanted to login...");
+						console.log(data.username+" wanted to login...");
 						console.log("Username "+data.username+" not found in database!");
 						socket.emit('login response',{successful: "false",reason: "This name does not exist!"});
 					}
@@ -258,7 +202,7 @@ io.on('connection', function(socket){
 					 * CASE 2 No Found User + New User Creation Request -> Creation-SUCCESS
 					 */
 					else{
-						console.log("You wanted to register a new account...");
+						console.log(data.username+" wanted to register a new account...");
 						    chatDB.insert({username: data.username, password: data.password}, function(err, body, header) {
 								if (err) {
 									return console.log('[database.insert] ', err.message);
@@ -274,17 +218,17 @@ io.on('connection', function(socket){
 				else{
 					console.log("User "+data.username+" found!");
 					if(data.newuser === "true"){
-						console.log("You wanted to create a new user...");
-						console.log("Username already taken!");
+						console.log(data.username+" wanted to create a new account...");
+						console.log("Username " + data.username+" already taken!");
 						socket.emit('login response',{successful: 'false',reason: 'Username already taken!'});
 					}
 					/*
 					 * CASE 4 User Found + No New User Creation -> It is a login request -> CHECK PASSWORD
 					 */
 					else{
-						console.log("You wanted to login...");
+						console.log(data.username+" wanted to login...");
 						chatDB.find({selector:{password:data.password}},function(er, result){
-							console.log("Checking password...");
+							console.log("Checking password for "+data.username+"...");
 							if(er){
 								throw er;
 							}
@@ -292,7 +236,7 @@ io.on('connection', function(socket){
 							 * CASE 4.1 INCORRECT PASSWORD -> Password-ERROR
 							 */
 							if(!result.docs[0]){
-								console.log("Incorrect password!");
+								console.log("Incorrect password for "+data.username+"!");
 								socket.emit('login response',{successful: 'flase',reason: 'Incorrect password!'});
 							}
 							/*
@@ -310,62 +254,4 @@ io.on('connection', function(socket){
 	});
 });
  
- /*
-  //OLD MONGODB CODE -> Not used anymore! Stays there in case something with Cloudant goes wrong!
-  socket.on('login request', function(data){	  
-	 if(data.newuser === "true"){
-		 Account.findOne({username: data.username}, function(err,account){
-			 if (err){
-				 return console.error(err);
-			 }
-			 else{
-				if(account === null){
-					 var user = new Account({username: data.username,password: data.password});
-				 	  user.save(function (err, user) {
-				 		  if (err){ 
-				 			  return console.error(err);
-				 		  }
-				 		  else{
-				 			 console.log('User '+data.username+' created a new account!');
-				 			 socket.emit('login response',{successful: "true"});
-				 		  }
-				 	});
-				 	
-				}
-				else{
-					console.log('User '+data.username+' failed to create a new account!');
-					socket.emit('login response',{successful: "false",reason: "Username already exists!"});
-				}
-			 }			
-		 });	 	 	 	  
-	 } 
-	 else{
-		 Account.findOne({username: data.username}, function(err,account){
-			 if (err){
-				 return console.error(err);
-			 }
-			 else{
-				 if(account !== null){
-					 if(account.password === data.password){
-						 console.log('User '+data.username+' logged in!');
-						 socket.emit('login response',{successful: "true"}); 
-					 }
-					 else{
-						 console.log('User '+data.username+' entered wrong password!');
-						 socket.emit('login response',{successful: "false",reason: "Wrong password!"}); 
-					 }					 
-				 }
-				 else{
-					 console.log('User '+data.username+' entered wrong name!');
-					 socket.emit('login response',{successful: "false",reason: "Wrong name!"});
-				 }
-			 }			
-		 });
-	 }
-  }); */ 
-
-/*
-http.listen(port, function(){
-  console.log('listening on *:' + port);
-});
-*/
+ 

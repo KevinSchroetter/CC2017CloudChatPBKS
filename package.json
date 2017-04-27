@@ -1,14 +1,14 @@
 {
   "name": "CCCloudChatPBKS",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Second Exercise from Philipp Bahnmueller(742233) and Kevin Schroetter(742982)",
   "dependencies": {
     "body-parser": "^1.17.1",
     "cloudant": "^1.7.1",
     "express": "^4.15.2",
-    "mongodb": "^2.2.25",
-    "mongoose": "^4.9.3",
-    "socket.io": "^1.7.3"
+    "socket.io": "^1.7.3",
+	"xss":"^0.3.3",
+	"valid-url":"^1.0.9"
   },
   "scripts": {
     "start": "node app.js"
