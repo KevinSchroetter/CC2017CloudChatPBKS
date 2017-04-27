@@ -52,10 +52,12 @@ app.use(function(req,res,next){
 	}
 	next();
 });
+/*
 app.use(function(req,res,next){
 	res.setHeader("Content-Security-Policy", "script-src 'self' https://cccloudchatpbks.mybluemix.net");
 	return next();
 });
+*/
 var io = require('socket.io').listen(server);
 
 var router = express.Router();
