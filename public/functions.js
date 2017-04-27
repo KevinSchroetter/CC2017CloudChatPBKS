@@ -10,3 +10,21 @@ function pbksValidate(string){
 	string = string.replace(/&quot;/g, "");
 	return string;
 }
+function regExCheckText(input){
+		var pattern = new RegExp(/[~`!#$%\^&% *+=\\[\]\\';,/{}|\\":<>\?]/); //unerlaubte Zeichen
+		if (pattern.test(input)) {
+			return false;
+		}
+		else{
+		return true;
+		}
+	}
+	function regExCheckPW(input){
+		var pattern = new RegExp(/[~`$%\^% =\\[\]\\';,/{}|\\":<>\?]/); //unerlaubte Zeichen
+		if (pattern.test(input)) {
+			return false;
+		}
+		else{
+		return true;
+		}
+	}

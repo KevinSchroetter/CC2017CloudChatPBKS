@@ -23,24 +23,7 @@
 <script src="jQuery/jquery.js"></script>
 <script src="functions.js"></script>
 <script>
-	function regExCheckText(input){
-		var pattern = new RegExp(/[~`!#$%\^&% *+=\\[\]\\';,/{}|\\":<>\?]/); //unerlaubte Zeichen
-		if (pattern.test(input)) {
-			return false;
-		}
-		else{
-		return true;
-		}
-	}
-	function regExCheckPW(input){
-		var pattern = new RegExp(/[~`$%\^% =\\[\]\\';,/{}|\\":<>\?]/); //unerlaubte Zeichen
-		if (pattern.test(input)) {
-			return false;
-		}
-		else{
-		return true;
-		}
-	}
+	
 	$(function(){
 		var socket = io();
 		$('form').submit(function(){
