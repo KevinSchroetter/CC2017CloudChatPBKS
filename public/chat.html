@@ -81,7 +81,7 @@
 						messageDisplay = message;
         				messageDisplay = getFormattedDate()+' (Private) '+sessionStorage.getItem('username')+' to '+splitted[1]+': '+message;
             			socket.emit('private message',{to: splitted[1],msg: message}); 
-            			$('#messages').append($('<li style="color:purple;">').text(message));
+            			$('#messages').append($('<li style="color:purple;">').text(messageDisplay));
                       	window.scrollTo(0, document.body.scrollHeight);
         			}        			       			
         			break;
