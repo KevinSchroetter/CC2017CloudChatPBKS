@@ -77,8 +77,8 @@
         				message = message.replace(splitted[0],'');
         				message = message.replace(splitted[1],'');
 						message = pbksValidate(message);
-						message = getFormattedDate()+' (Private) '+sessionStorage.getItem('username')+': '+message;
 						messageDisplay = message;
+						message = getFormattedDate()+' (Private) '+sessionStorage.getItem('username')+': '+message;
         				messageDisplay = getFormattedDate()+' (Private) '+sessionStorage.getItem('username')+' to '+splitted[1]+': '+message;
             			socket.emit('private message',{to: splitted[1],msg: message}); 
             			$('#messages').append($('<li style="color:purple;">').text(messageDisplay));
