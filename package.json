@@ -10,7 +10,7 @@
 	"xss":"^0.3.3",
 	"valid-url":"^1.0.9",
 	"helmet":"^3.5.0",
-	"socket.io-redis": "^4.0.0"
+	"redis":"^2.7.1"
   },
   "scripts": {
     "start": "node app.js"
