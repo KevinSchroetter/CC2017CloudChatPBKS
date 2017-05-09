@@ -79,7 +79,8 @@
 						message = pbksValidate(message);
 						messageDisplay = message;
 						message = getFormattedDate()+' (Private) '+sessionStorage.getItem('username')+': '+message;
-        				messageDisplay = getFormattedDate()+' (Private) '+sessionStorage.getItem('username')+' to '+splitted[1]+': '+message;
+						messageDisplay = messageDisplay + "test";
+        				//messageDisplay = getFormattedDate()+' (Private) '+//sessionStorage.getItem('username')+' to '+splitted[1]+': '+message;
             			socket.emit('private message',{to: splitted[1],msg: message}); 
             			$('#messages').append($('<li style="color:purple;">').text(messageDisplay));
                       	window.scrollTo(0, document.body.scrollHeight);
