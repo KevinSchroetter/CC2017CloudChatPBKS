@@ -219,7 +219,7 @@ io.on('connection', function(socket){
 									return console.log('[database.insert] ', err.message);
 								}
 								console.log('New user '+data.username+' created!');
-								socket.broadcast.emit('login response', {successful: 'true', username:data.username});
+								socket.emit('login response', {successful: 'true'});
 							});
 					}
 				}
