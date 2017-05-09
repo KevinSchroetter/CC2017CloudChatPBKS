@@ -59,8 +59,6 @@ app.use(helmet.xssFilter());
 
 
 var io = require('socket.io').listen(server);
-var redis = require('socket.io-redis');
-io.adapter(redis({host:'https://cccloudchatpbks.mybluemix.net', port: port}));
 var router = express.Router();
 /*
  * Cloudant information and credentials
