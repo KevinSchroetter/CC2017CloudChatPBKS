@@ -12,6 +12,7 @@ var xss = require('xss');
 var validUrl = require('valid-url');
 var helmet = require('helmet');
 
+
 //#################################################
 //Server initialization
 var http = require('http')
@@ -59,6 +60,9 @@ app.use(helmet.xssFilter());
 
 
 var io = require('socket.io').listen(server);
+var redis = require('socket.io-redis');
+io.adapter(redis({host:'https://www.cccloudchatpbks.mybluemix.net', port: port}));
+
 
 var router = express.Router();
 /*
