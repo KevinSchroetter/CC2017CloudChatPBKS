@@ -71,7 +71,7 @@
 		});
 		
 		socket.on('login response',function(data){
-			if(data.successful === "true"){
+			if(data.successful === "true" && data.username == sessionStorage.getItem('username')){
 				console.log('login successful');
 				document.location.href = "chat";
 			}
