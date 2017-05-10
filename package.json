@@ -10,7 +10,8 @@
 	"xss":"^0.3.3",
 	"valid-url":"^1.0.9",
 	"helmet":"^3.5.0",
-	"redis":"^2.7.1"
+	"redis":"^2.7.1",
+	"redis-server":"^1.1.0"
   },
   "scripts": {
     "start": "node app.js"
