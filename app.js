@@ -74,7 +74,7 @@ var apiPW = 'ac834bca3e30393e4208ac1a5aa1c56a1074f6b1';	//Password for the gener
 var sockets = {};
 
 // Redis Server
-
+/*
 var RedisServer = require('redis-server');
 var server = new RedisServer({
 	 port: 6379,
@@ -87,12 +87,12 @@ server.open(function(err) {
 	  console.log("Redis Server started!");
 	}
 });
-
+*/
 // Redis
 
 var redis = require("redis");
-var sub = redis.createClient(6379,"https://cccloudchatpbks.mybluemix.net");
-var pub = redis.createClient(6379,"https://cccloudchatpbks.mybluemix.net");
+var sub = redis.createClient(6379,"79.230.61.30");
+var pub = redis.createClient(6379,"79.230.61.30");
 
 sub.on('message',function(channel,msg){
 	io.sockets.emit('chat message',msg);	
