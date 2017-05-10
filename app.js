@@ -62,8 +62,8 @@ var io = require('socket.io').listen(server);
 var redis = require("socket.io-redis");
 var sport = 6379;
 var shost = '127.0.0.1';
-var	pub = redis.createClient(sport,shost);
-var sub = redis.createClient(sport,shost, {detect_buffers:true});
+var	pub = redis(sport,shost);
+var sub = redis(sport,shost, {detect_buffers:true});
 io.adapter(adapter({pubClient: pub, subClient: sub}));
 	
 
