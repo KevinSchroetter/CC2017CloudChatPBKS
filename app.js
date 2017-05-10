@@ -59,6 +59,9 @@ app.use(helmet.xssFilter());
 
 
 var io = require('socket.io').listen(server);
+var redis = require("redis");
+var sub = redis.createClient(), pub = redis.createClient();
+
 var router = express.Router();
 /*
  * Cloudant information and credentials
