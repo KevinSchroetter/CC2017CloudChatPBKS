@@ -94,7 +94,7 @@
         	}
         	else{
         		message = getFormattedDate()+' '+sessionStorage.getItem('username')+': '+message;
-				socket.emit('chat message',{msg: message});
+				socket.emit('chat message',message);
 				message = pbksValidate(message);
         		$('#messages').append($('<li style="font-weight:bold;">').text(message));
               	window.scrollTo(0, document.body.scrollHeight);
@@ -105,8 +105,8 @@
         });
       
         socket.on('chat message', function(msg){
-			msg.msg = pbksValidate(msg.msg);
-			$('#messages').append($('<li>').text(msg.msg));
+			msg = pbksValidate(msg);
+			$('#messages').append($('<li>').text(msg));
 			window.scrollTo(0, document.body.scrollHeight);
         });
         

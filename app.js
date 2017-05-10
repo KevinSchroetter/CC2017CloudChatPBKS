@@ -73,6 +73,33 @@ var apiPW = 'ac834bca3e30393e4208ac1a5aa1c56a1074f6b1';	//Password for the gener
 
 var sockets = {};
 
+// Redis Server
+
+var RedisServer = require('redis-server');
+var server = new RedisServer({
+	 port: 6379,
+	 bin: 'Redis/redis-server.exe',
+	 conf: 'Redis/conf/redis.conf'
+});
+
+server.open(function(err) {
+	if (err === null) {
+	  console.log("Redis Server started!");
+	}
+});
+
+// Redis
+
+var redis = require("redis");
+var sub = redis.createClient();
+var pub = redis.createClient();
+
+sub.on('message',function(channel,msg){
+	io.sockets.emit('chat message',msg);	
+});
+
+sub.subscribe('chat message');
+
 
 //Creating a static folder 'public' so that the html files are able to load local scripts and pages
 app.use(express.static(path.join(__dirname,'public')));
@@ -122,8 +149,11 @@ io.on('connection', function(socket){
 	 * Function that broadcasts a message sent from a single chat user to all other users
 	 */
 	socket.on('chat message', function(msg){
-	msg.msg = xss(msg.msg);
+	msg = xss(msg);
 		socket.broadcast.emit('chat message', msg);
+		sub.unsubscribe();
+		pub.publish('chat message',msg);
+		sub.subscribe('chat message');
 	});
 	
 	/*
