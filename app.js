@@ -91,8 +91,8 @@ server.open(function(err) {
 // Redis
 
 var redis = require("redis");
-var sub = redis.createClient({port: 6379, host: "https://cccloudchatpbks.mybluemix.net"});
-var pub = redis.createClient({port: 6379, host: "https://cccloudchatpbks.mybluemix.net"});
+var sub = redis.createClient(6379,"https://cccloudchatpbks.mybluemix.net");
+var pub = redis.createClient(6379,"https://cccloudchatpbks.mybluemix.net");
 
 sub.on('message',function(channel,msg){
 	io.sockets.emit('chat message',msg);	
