@@ -59,12 +59,7 @@ app.use(helmet.xssFilter());
 
 
 var io = require('socket.io').listen(server);
-const redis = require("redis");
-rClient = redis.createClient(9970,"https://redistogo:e6501052910ce9b0d888eab8afaa51bd@greeneye.redistogo.com:9970/
-");
-rClient.on("connect",function(){
-	console.log("ReDIS CONNECTED");
-});
+
 
 	
 /*
