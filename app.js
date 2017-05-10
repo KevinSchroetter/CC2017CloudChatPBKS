@@ -59,14 +59,12 @@ app.use(helmet.xssFilter());
 
 
 var io = require('socket.io').listen(server);
-
-const RedisServer = require("redis-server");
-const rServer = new RedisServer(6379);
-rServer.open(function(err){
-	if (err ===null){
-		console.log("Redis connected");
-	}
+const redis = require("redis");
+rClient = redis.createClient(port,"https://redistogo.com/instances/449972/");
+rClient.on("connect",function(){
+	console.log("ReDIS CONNECTED");
 });
+
 	
 /*
 var redis = require("redis");
