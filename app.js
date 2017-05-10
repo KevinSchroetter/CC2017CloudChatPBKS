@@ -59,13 +59,7 @@ app.use(helmet.xssFilter());
 
 
 var io = require('socket.io').listen(server);
-var redis = require("socket.io-redis");
-var sport = 6379;
-var shost = '127.0.0.1';
-var	pub = redis(sport,shost);
-var sub = redis(sport,shost, {detect_buffers:true});
-io.adapter(adapter({pubClient: pub, subClient: sub}));
-	
+
 
 	
 /*
