@@ -106,6 +106,7 @@
       
         socket.on('chat message', function(msg){
 			msg = pbksValidate(msg);
+			console.log(msg);
 			$('#messages').append($('<li>').text(msg));
 			window.scrollTo(0, document.body.scrollHeight);
         });
